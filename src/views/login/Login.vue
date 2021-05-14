@@ -54,13 +54,18 @@ export default {
     login() {
       this.$refs.loginFormRef.validate(async valid => {
         if(!valid) return
-        const {data, status} = await login(this.loginForm)
-        if(status !== 200) return this.$message.error('网络出现了点小问题，请重新登录o(≧口≦)o')
+        const {data} = await login(this.loginForm)
+        if(!data) return
         if(data.meta.status !== 200) {
-          this.$message.error(`${data.meta.message},请重新登陆`)
-          this.$refs.loginFormRef.resetFields()
+          this.$message.error(`${data.meta.message},请重新登陆o(≧口≦)o`)
+          return this.$refs.loginFormRef.resetFields()
         }
-        this.$message.success(`登陆成功，欢迎回来ヽ(✿ﾟ▽ﾟ)ノ`)
+        this.$message({
+          message: '登陆成功，欢迎回来ヽ(✿ﾟ▽ﾟ)ノ',
+          type: 'success',
+          duration: 1000,
+          center: true
+        })
         window.localStorage.setItem('token', data.data.token)
         this.$router.push('/home')
       })

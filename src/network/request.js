@@ -1,6 +1,7 @@
 import axios from 'axios'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import { Message } from 'element-ui'
 
 export function request(config) {
   // 1创建实例
@@ -16,9 +17,9 @@ export function request(config) {
   // 2axios的拦截器
   instance.interceptors.request.use(config=>{
     NProgress.start()
-    // const token = window.sessionStorage.getItem('token')
     
-    // config.headers.Authorization = 'Bearer ' + token
+    const token = window.localStorage.getItem('token')
+    config.headers.Authorization = 'Bearer ' + token
     
     // 放行
     return config
@@ -28,7 +29,13 @@ export function request(config) {
 
   instance.interceptors.response.use(res=>{
     NProgress.done()
-    return {
+    if(res.status !== 200) {
+      Message.error('网络出现了点小问题o(≧口≦)o')
+      return {
+        data: ''
+      }
+    } 
+    else return {
       data: res.data,
       status: res.status
     }
