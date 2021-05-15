@@ -62,3 +62,11 @@ export function deleteUser(id) {
     url: `/users/${id}`,
   })
 }
+
+// 分配用户角色
+export function setRole(id, roleId) {
+  return request({
+    method: 'post',
+    url: `/users/${id}/roles/${roleId}`,
+  })
+}
