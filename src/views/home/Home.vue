@@ -94,7 +94,8 @@ export default {
     async getAdminMenus() {
       const {data} = await getAdminMenus()
       if(!data) return
-      if(data.meta.status !== 200) this.$message.error(`${data.meta.message},获取菜单栏数据失败`)
+      if(data.meta.status !== 200) return this.logout()
+      // this.$message.error(`${data.meta.message},获取菜单栏数据失败`)
       this.menuList = data.data.result
     },
 
