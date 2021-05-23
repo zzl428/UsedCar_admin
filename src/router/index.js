@@ -20,6 +20,7 @@ const Cate = () => import('views/car/Cate.vue')
 const Params = () => import('views/car/Params.vue')
 const Order = () => import('views/order/Order.vue')
 const Reports = () => import('views/report/Reports.vue')
+const Add = () => import('views/car/Add.vue')
 
 const routes = [
   {path: '/', redirect: '/login'},
@@ -38,6 +39,7 @@ const routes = [
       {path: '/categories', component: Cate},
       {path: '/orders', component: Order},
       {path: '/reports', component: Reports},
+      {path: '/cars/add', component: Add},
     ]
   },
 ]
