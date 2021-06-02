@@ -47,7 +47,21 @@
           <div class="right">
             <!-- 面包屑导航 -->
             <bread-crumb></bread-crumb>
-            <el-button type="danger" @click="logout">退出</el-button>
+            <div class="logout">
+              <el-dropdown @command="handleCommand">
+                <el-avatar :size="50">{{username}}</el-avatar>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item disabled>{{role}}: {{username}}</el-dropdown-item>
+                  <a href="https://github.com/zzl428/UsedCar_admin" target="_blank" style='text-decoration:none'>
+                      <el-dropdown-item>项目仓库</el-dropdown-item>
+                  </a>
+                  <el-dropdown-item divided command="logout">
+                    退出登录
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </div>
+            
           </div>
         </el-header>
         <!-- 主体主要区域 -->
@@ -68,6 +82,8 @@ export default {
   name: 'Home',
   data() { 
     return {
+      username: localStorage.getItem('username'),
+      role: localStorage.getItem('role'),
       // 菜单栏数据
       menuList: [],
       // 菜单栏图标数据
@@ -100,10 +116,13 @@ export default {
     },
 
     // 功能
-    // 退出
-    logout() {
-      window.localStorage.removeItem('token')
-      this.$router.push('/login')
+    handleCommand(command) {
+      if (command == "logout") {
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('username')
+        window.localStorage.removeItem('role')
+        this.$router.push('/login')
+      }
     },
 
   },
@@ -178,5 +197,13 @@ export default {
 
   .el-main {
     background-color: #f0f2f5;
+  }
+
+  .logout {
+    
+  }
+
+  .el-dropdown-menu__item {
+    text-align: center;
   }
 </style>

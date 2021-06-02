@@ -67,6 +67,8 @@ export default {
           center: true
         })
         window.localStorage.setItem('token', data.data.token)
+        window.localStorage.setItem('username', data.data.username)
+        window.localStorage.setItem('role', data.data.role)
         this.$router.push('/home')
       })
     },

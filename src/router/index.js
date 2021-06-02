@@ -13,11 +13,11 @@ const Login = () => import('views/login/Login.vue')
 const Home = () => import('views/home/Home.vue')
 const Welcome = () => import('views/home/Welcome.vue')
 const Users = () => import('views/user/Users.vue')
+const FrontUsers = () => import('views/user/FrontUsers.vue')
 const Rights = () => import('views/right/Rights.vue')
 const Roles = () => import('views/right/Roles.vue')
 const CarList = () => import('views/car/CarList.vue')
 const Cate = () => import('views/car/Cate.vue')
-const Params = () => import('views/car/Params.vue')
 const Order = () => import('views/order/Order.vue')
 const Reports = () => import('views/report/Reports.vue')
 const Add = () => import('views/car/Add.vue')
@@ -32,10 +32,10 @@ const routes = [
     children: [
       {path: '/welcome', component: Welcome},
       {path: '/users', component: Users},
+      {path: '/front_user', component: FrontUsers},
       {path: '/rights', component: Rights},
       {path: '/roles', component: Roles},
       {path: '/cars', component: CarList},
-      {path: '/params', component: Params},
       {path: '/categories', component: Cate},
       {path: '/orders', component: Order},
       {path: '/reports', component: Reports},

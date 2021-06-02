@@ -70,3 +70,14 @@ export function setRole(id, roleId) {
     url: `/users/${id}/roles/${roleId}`,
   })
 }
+
+// 获取前台用户列表
+export function FrontUserList(queryInfo) {
+  return request({
+    method: 'get',
+    url: '/front/users',
+    params: {
+      queryInfo
+    }
+  })
+}
