@@ -96,7 +96,7 @@ export default {
       this.visitTotal = data.data.totalVisit
       // this.todayVisit = data.data.result.todayVisit
       this.cars = data.data.totalCar
-      this.money = data.data.result.money
+      this.money = data.data.result.money.toFixed(2)
     },
 
     // 功能

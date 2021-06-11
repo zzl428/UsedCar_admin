@@ -15,7 +15,8 @@
       </el-row>
 
       <!-- 用户列表区域 -->
-      <el-table :data="userList" style="width: 100%" border stripe>
+      <el-table :data="userList" style="width: 100%" border stripe 
+        @expand-change="expand">
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column prop="username" label="姓名"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
@@ -29,7 +30,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180">
+        <el-table-column label="操作" width="230">
           <template slot-scope="scope">
             <!-- 修改 -->
             <el-button  type="primary" 
@@ -44,6 +45,10 @@
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini" @click="allotRole(scope.row)"></el-button>
             </el-tooltip>
+            <!-- 日志 -->
+            <el-button  type="success" 
+                        icon="el-icon-s-check" size="mini" 
+                        @click="expand(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -135,11 +140,55 @@
         <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
       </span>
     </el-dialog>
+
+    <!-- 时间线 -->
+    <el-drawer
+      title="操作日志"
+      :visible.sync="loading" :show-close="false"
+      :with-header="true">
+      <el-timeline>
+        <el-timeline-item :timestamp="item.visit" placement="top" 
+          :color="Object.keys(item).length > 1 ? '#0bbd87' : ''"
+          :size="Object.keys(item).length > 1 ? 'large' : 'normal'"
+          v-for="(item, index) in userList.op" :key="index">
+          <el-card>
+            <div v-if="item.spy_admin_user">
+              <h4>管理员数据 操作日志</h4>
+              <p v-for="(item2, index2) in item.spy_admin_user" :key="index2">
+                <span v-if="item2.op === 'add'">添加</span>
+                <span v-else-if="item2.op === 'edit'">编辑</span>
+                <span v-else-if="item2.op === 'delete'">删除</span>
+                提交于 {{item2.time.slice(11, 19)}} 
+              </p>
+            </div>
+            <div v-if="item.spy_admin_good">
+              <h4>商品数据 操作日志</h4>
+              <p v-for="(item2, index2) in item.spy_admin_good" :key="index2">
+                <span v-if="item2.op === 'add'">添加</span>
+                <span v-else-if="item2.op === 'edit'">编辑</span>
+                <span v-else-if="item2.op === 'delete'">删除</span>
+                提交于 {{item2.time.slice(11, 19)}} 
+              </p>
+            </div>
+            <div v-if="item.spy_admin_role">
+              <h4>角色数据 操作日志</h4>
+              <p v-for="(item2, index2) in item.spy_admin_role" :key="index2">
+                <span v-if="item2.op === 'add'">添加</span>
+                <span v-else-if="item2.op === 'edit'">编辑</span>
+                <span v-else-if="item2.op === 'delete'">删除</span>
+                提交于 {{item2.time.slice(11, 19)}} 
+              </p>
+            </div>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import {getUserList, alterUserState, addUser, searchUserById, alterUser, deleteUser, setRole} from 'network/user'
+import {getUserList, alterUserState, addUser, searchUserById, alterUser, deleteUser, setRole, getOp} 
+from 'network/user'
 import {requiredRule, lengthRule, validName, validEmail, validMobile, partValidEmail, partValidMobile} from 'common/form_rules'
 import {getRoles} from 'network/rights'
 
@@ -178,6 +227,7 @@ export default {
         pagenum: 1,
         pagesize: 5,
       },
+      loading: false,
       // 用户数据列表
       userList: [],
       total:0,
@@ -240,6 +290,7 @@ export default {
       if(!data) return
       if(data.meta.status !== 200) return this.$message.error(`${data.meta.message},获取用户数据列表失败`)
       this.userList = data.data.result
+      for(let i of this.userList) i.expand = false
       this.total = data.data.total
     },
     // 改变用户状态
@@ -258,6 +309,8 @@ export default {
         if(!data) return
         if(data.meta.status !== 200) this.$message.error(`${data.meta.message},添加管理员失败`)
         this.$message.success(`${data.meta.message}`)
+        this.getUserList()
+        this.dialogVisible = false
         this.$refs.addFormRef.resetFields()
       })
     },
@@ -337,6 +390,14 @@ export default {
       this.$message.success('分配角色成功')
       this.getUserList()
     },
+    // 表格懒加载函数
+    async expand(id) {
+      const {data} = await getOp(id)
+      if(!data) return
+      if(data.meta.status !== 200) return this.$message.error('获取操作信息失败') 
+      this.userList.op = data.data.result
+      this.loading = true
+    },
 
     // 功能
     // pagesize改变
@@ -366,4 +427,5 @@ export default {
  4.背景(background, border等)
  5.其他(animation, transition等)
 */
+  
 </style>

@@ -7,6 +7,7 @@ export function request(config) {
   // 1创建实例
   const instance = axios.create({
     baseURL: 'http://localhost:8008',
+    // http://47.110.246.114
     headers: {
       "Content-Type": config.headers || "application/x-www-form-urlencoded;charset=UTF-8"
     },

@@ -153,7 +153,7 @@
           </el-tab-pane>
           <el-tab-pane label="汽车图片" name="3">
             <el-upload
-              action="http://localhost:8008/upload/goods/pics"
+              action="http://47.110.246.114:8008/upload/goods/pics"
               :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
               :headers="headerObj"
               list-type="picture">

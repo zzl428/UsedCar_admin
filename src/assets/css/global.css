@@ -28,3 +28,9 @@ html, body, #app {
 .ql-editor {
   min-height: 300px;
 }
+
+.el-drawer__open .el-drawer.rtl {
+  overflow: auto;
+  width: 30% !important;
+  padding-right: 40px;
+}

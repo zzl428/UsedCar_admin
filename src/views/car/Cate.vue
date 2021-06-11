@@ -65,7 +65,7 @@
         </el-form-item>
         <el-form-item label="品牌:" prop="cate">
           <el-cascader clearable
-            v-model="selectedKeys"
+            v-model="addCateForm.cate"
             :options="parentCateList"
             :props="{ expandTrigger: 'hover', value: 'id', label: 'name', children: 'children', 
                       checkStrictly: false }"
@@ -73,7 +73,7 @@
         </el-form-item>
         <el-form-item label="Logo" prop="">
           <el-upload ref="uploadRef"
-            action="http://localhost:8008/upload/cate/logo"
+            action="http://47.110.246.114:8008/upload/cate/logo"
             :on-preview="handlePreview" :on-success="handleSuccess" :on-remove="handleRemove"
             :headers="headerObj"
             list-type="picture">
@@ -136,12 +136,13 @@ export default {
       // 商品分类条数
       total: 0,
       // 选中父级id
-      selectedKeys: [],
+      // selectedKeys: [],
       // 添加分类的表单对象
       addCateForm: {
         cat_name: '',
         cat_pid: 0,
-        temp_path: ''
+        temp_path: '',
+        cate: []
       },
       // 编辑分类
       editCateForm: {
@@ -149,9 +150,9 @@ export default {
         cat_id: 0
       },
       // 懒加载刷新的变量
-      tree: '',
-      node:'',
-      nodeResolve :'',
+      tree: null,
+      node: null,
+      nodeResolve : null,
       // 控制添加分类的对话框的显示
       addCateDialogVisible: false,
       // 控制编辑分类的对话框的显示
@@ -161,8 +162,8 @@ export default {
 
       // 验证分类的规则对象
       addCateRules: {
-        cat_name: [{ required: true, message: '请输入分类名称', trigger: 'blur' },],
-        cate: [{required: true, message: '请选择品牌', trigger: 'blur'}]
+        cat_name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+        cate: [{required: true, message: '请选择品牌', trigger: 'change'}]
       },
 
       // 图片上传的请求头
@@ -229,7 +230,7 @@ export default {
         if(!data) return
         if(data.meta.status !== 200) return this.$message.error('添加分类失败')
         this.$message.success('添加分类成功')
-        this.node.children = []//把存起来的node的子节点清空，不然会界面会出现重复树！
+        this.node.children = [] //把存起来的node的子节点清空，不然会界面会出现重复树！
         this.load(this.tree, this.node, this.nodeResolve)//再次执行懒加载的方法
         this.addCateDialogVisible = false
       })
@@ -301,15 +302,15 @@ export default {
     // 关闭添加分类表单
     closeAddCateForm() {
       this.$refs.addCateFormRef.resetFields()
-      this.selectedKeys = []
+      this.addCateForm.cate = []
       this.addCateForm.cat_pid = 0
       this.$refs.uploadRef.clearFiles()
       this.addCateDialogVisible = false
     },
     // 父级id改变
     parentCateChange() {
-      if(this.selectedKeys.length > 0) {
-        this.addCateForm.cat_pid = this.selectedKeys[1]
+      if(this.addCateForm.cate.length > 0) {
+        this.addCateForm.cat_pid = this.addCateForm.cate[1]
       } else {
         this.addCateForm.cat_pid = 0
       }

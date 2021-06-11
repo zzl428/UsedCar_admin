@@ -81,3 +81,11 @@ export function FrontUserList(queryInfo) {
     }
   })
 }
+
+// 获取用户操作数据
+export function getOp(id) {
+  return request({
+    method: 'get',
+    url: `/users/op/${id}`,
+  })
+}
